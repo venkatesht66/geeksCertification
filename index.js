@@ -24,6 +24,6 @@ app.listen(PORT, () => {
     console.log(`Serve is running at ${PORT}`);
 });
 
-app.use('/',(req,res)=>{
-    res.send("<h1>Welcome To BrightLearn");
-})
+// app.use('/',(req,res)=>{
+//     res.send("<h1>Welcome To BrightLearn");
+// })
