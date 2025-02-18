@@ -29,6 +29,26 @@ const studentRegister = async (req, res) => {
     }
 }
 
+
+const getAllStudents = async (req, res) => {
+    try {
+        const students = await Student.find();
+        if (!students || students.length === 0) {
+            return res.status(404).json({ message: "No students found" });
+        }
+
+        res.status(200).json({
+            message: "All Students Retrieved Successfully",
+            students
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+
+
 const studentLogin = async (req, res) => {
     const { studentEmail, studentPhone } = req.body;
     try {
@@ -137,4 +157,4 @@ const verifyCertificate = async (req, res) => {
 }
 
 
-module.exports = { studentRegister, studentLogin, updateStudent, deleteStudent, verifyCertificate };
+module.exports = { studentRegister, studentLogin, updateStudent, deleteStudent, verifyCertificate ,getAllStudents};
