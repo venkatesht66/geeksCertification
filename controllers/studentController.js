@@ -15,8 +15,8 @@ const studentRegister = async (req, res) => {
             studentPhone,
             studentCourseName,
             studentCourseCompleted,
-            certificateId:null,
-            expiryDate:null
+            certificateId: null,
+            expiryDate: null
         });
 
         await newStudent.save();
@@ -41,25 +41,25 @@ const studentLogin = async (req, res) => {
             return res.status(200).json({ message: "Student Course Not Completed" })
         }
 
-        if (student.certificateId && student.expireDate){
+        if (student.certificateId && student.expireDate) {
             return res.status(200).json({
-                message:"Course Completed Successfully",
-                certificateId:student.certificateId,
-                expireDate:student.expireDate.toISOString().split('T')[0]
+                message: "Course Completed Successfully",
+                certificateId: student.certificateId,
+                expireDate: student.expireDate.toISOString().split('T')[0]
             });
         }
 
         let certificateId;
 
-        if (student.studentCourseName === "Full Stack Web Development"){
+        if (student.studentCourseName === "Full Stack Web Development") {
             certificateId = "BL" + "FSWB" + Math.ceil((Math.random() * 10000));
-        }else if (student.studentCourseName === "Gen AI"){
+        } else if (student.studentCourseName === "Gen AI") {
             certificateId = "BL" + "GAI" + Math.ceil((Math.random() * 10000));
-        }else if (student.studentCourseName === "Data Science"){
+        } else if (student.studentCourseName === "Data Science") {
             certificateId = "BL" + "DS" + Math.ceil((Math.random() * 10000));
-        }else if (student.studentCourseName === "Data Analytics"){
+        } else if (student.studentCourseName === "Data Analytics") {
             certificateId = "BL" + "DA" + Math.ceil((Math.random() * 10000));
-        }else if (student.studentCourseName === "AWS"){
+        } else if (student.studentCourseName === "AWS") {
             certificateId = "BL" + "AWS" + Math.ceil((Math.random() * 10000));
         }
 
@@ -73,7 +73,7 @@ const studentLogin = async (req, res) => {
         res.status(200).json({
             message: "Course Completed Successfully. Certificate Issued!",
             certificateId: certificateId,
-            expireDate:expireDate.toISOString().split('T')[0]
+            expireDate: expireDate.toISOString().split('T')[0]
         });
         console.log("Certificate Issued");
 
@@ -83,37 +83,58 @@ const studentLogin = async (req, res) => {
     }
 }
 
-const updateStudent = async (req,res)=>{
-    const {studentPhone,updates} = req.body;
+const updateStudent = async (req, res) => {
+    const { studentPhone, updates } = req.body;
     try {
-        const student = await Student.findOneAndUpdate({studentPhone},updates,{new:true});
-        if (!student){
-            return res.status(404).json({message:"Student not found"});
+        const student = await Student.findOneAndUpdate({ studentPhone }, updates, { new: true });
+        if (!student) {
+            return res.status(404).json({ message: "Student not found" });
         }
         // res.status(200).json({studentDetails:student});
-        res.status(200).json({message:"Student Details Updated Successfully",student});
-        
+        res.status(200).json({ message: "Student Details Updated Successfully", student });
+
     } catch (error) {
         console.log(error);
-        res.status(500).json({error:"Internal Server Error"});
+        res.status(500).json({ error: "Internal Server Error" });
     }
 }
 
-const deleteStudent = async(req,res)=>{
-    const {studentPhone} = req.body;
+const deleteStudent = async (req, res) => {
+    const { studentPhone } = req.body;
     try {
-        const student = await Student.findOneAndDelete({studentPhone});
+        const student = await Student.findOneAndDelete({ studentPhone });
 
-        if (!student){
-            return res.status(404).json({message:"Student not found"});
+        if (!student) {
+            return res.status(404).json({ message: "Student not found" });
         }
         await Student.findOneAndDelete({ certificateId: student.certificateId });
-        res.status(200).json({message:"Student Deleted Successfully"});
-        
+        res.status(200).json({ message: "Student Deleted Successfully" });
+
     } catch (error) {
         console.log(error);
-        res.status(500).json({error:"Internal Server Error"});
+        res.status(500).json({ error: "Internal Server Error" });
     }
 }
 
-module.exports = { studentRegister, studentLogin, updateStudent, deleteStudent };
+const verifyCertificate = async (req, res) => {
+    const { certificateId } = req.body;
+    try {
+        const certificate = await Student.findOne({ certificateId });
+        if (!certificate) {
+            return res.status(404).json({ message: "Invalid CertificateId" });
+        }
+        res.status(200).json({
+            message: "Certificate Verified",
+            certificateId: certificate.certificateId,
+            studentName: certificate.studentName,
+            courseName: certificate.courseName,
+            expireDate: certificate.expireDate.toISOString().split('T')[0]
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+}
+
+
+module.exports = { studentRegister, studentLogin, updateStudent, deleteStudent, verifyCertificate };
