@@ -5,6 +5,9 @@ const Mongoose = require('mongoose');
 const PORT = process.env.PORT || 3000;
 const studentRoutes = require('./routes/studentRoutes');
 const bodyParser = require('body-parser');
+const cors = require('cors');
+
+app.use(cors());
 
 dotEnv.config();
 

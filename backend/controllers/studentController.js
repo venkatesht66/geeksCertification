@@ -1,7 +1,9 @@
 const Student = require('../models/Student');
 
 const studentRegister = async (req, res) => {
-    const { studentName, studentEmail, studentPhone, studentCourseName, studentCourseCompleted } = req.body;
+    let { studentName, studentEmail, studentPhone, studentCourseName, studentCourseCompleted } = req.body;
+    studentCourseCompleted = studentCourseCompleted === true || studentCourseCompleted === "true";
+
     try {
         const studentemail = await Student.findOne({ studentEmail });
         const studentphone = await Student.findOne({ studentPhone });
@@ -15,8 +17,7 @@ const studentRegister = async (req, res) => {
             studentPhone,
             studentCourseName,
             studentCourseCompleted,
-            certificateId: null,
-            expiryDate: null
+            certificateId: undefined
         });
 
         await newStudent.save();
@@ -86,7 +87,9 @@ const studentLogin = async (req, res) => {
         const expireDate = new Date();
         expireDate.setFullYear(expireDate.getFullYear() + 2);
 
-        student.certificateId = certificateId;
+        if (!student.certificateId) { 
+            student.certificateId = certificateId; 
+        }
         student.expireDate = expireDate;
         await student.save();
 
@@ -105,19 +108,46 @@ const studentLogin = async (req, res) => {
 
 const updateStudent = async (req, res) => {
     const { studentPhone, updates } = req.body;
+    console.log("Received phone number:", studentPhone);
+    console.log("Updates received:", updates);
+
     try {
-        const student = await Student.findOneAndUpdate({ studentPhone }, updates, { new: true });
+        const student = await Student.findOneAndUpdate(
+            { studentPhone },
+        {$set:updates},
+    {new:true});
         if (!student) {
             return res.status(404).json({ message: "Student not found" });
         }
         // res.status(200).json({studentDetails:student});
-        res.status(200).json({ message: "Student Details Updated Successfully", student });
+
+
+        res.status(200).json({ message: "Student Details Updated Successfully", student});
 
     } catch (error) {
         console.log(error);
         res.status(500).json({ error: "Internal Server Error" });
     }
 }
+
+
+const getStudent = async (req, res) => {
+    const { studentPhone } = req.params;
+
+    try {
+        const student = await Student.findOne({ studentPhone });
+
+        if (!student) {
+            return res.status(404).json({ message: "Student not found" });
+        }
+
+        res.status(200).json(student);
+    } catch (error) {
+        console.error("Error fetching student:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+
 
 const deleteStudent = async (req, res) => {
     const { studentPhone } = req.body;
@@ -157,4 +187,4 @@ const verifyCertificate = async (req, res) => {
 }
 
 
-module.exports = { studentRegister, studentLogin, updateStudent, deleteStudent, verifyCertificate ,getAllStudents};
+module.exports = { studentRegister, studentLogin, updateStudent, deleteStudent, verifyCertificate ,getAllStudents,getStudent};

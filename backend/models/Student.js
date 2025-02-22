@@ -18,16 +18,15 @@ const studentSchema = new mongoose.Schema({
     studentCourseName:{
         type:String,
         required:true,
-        default:false
     },
     studentCourseCompleted:{
         type:Boolean,
         required:true,
-        default:false
     },
     certificateId:{
         type:String,
-        required:false
+        unique:true,
+        sparse:true
     },
     expireDate:{
         type:Date,

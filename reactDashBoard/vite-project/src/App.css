@@ -1,0 +1,75 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+
+.navbarImage{
+    text-align: center;
+}
+
+.navbarImage{
+    height:350px;
+    background-size: cover;
+    align-self: center;
+
+}
+
+.landingBtns{
+    background-color: black;
+    color:white;
+    font-family: "Roboto";
+    padding:20px;
+    height:100px;
+    width:300px;
+    cursor: pointer;
+    margin:20px;
+    border-radius: 5px;
+}
+
+.btnContainer{
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.studentLoginForm{
+    text-align: center;
+}
+
+.formHeading{
+    color:black;
+    font-family: "Roboto";
+    font-size: 50px;
+    margin-bottom: 50px;
+    font-weight: bold;
+}
+
+.labelText{
+    font-family: 'Roboto';
+    font-size: 20px;
+    color:black;
+}
+
+.formInputs{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.getCertificateBtn{
+    background-color: black;
+    color:white;
+    font-family: "Roboto";
+    padding:20px;
+    height:70px;
+    width:200px;
+    cursor: pointer;
+    margin:20px;
+    border-radius: 5px;
+}
+
+.courseCompleteDetails{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
