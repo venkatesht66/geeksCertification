@@ -51,14 +51,14 @@ const getAllStudents = async (req, res) => {
 
 
 const studentLogin = async (req, res) => {
-    const { studentEmail, studentPhone } = req.body;
+    const { studentPhone,studentEmail } = req.body;
     try {
-        const student = await Student.findOne({ studentEmail, studentPhone });
+        const student = await Student.findOne({studentPhone,studentEmail});
         if (!student) {
             return res.status(404).json({ message: "Student Details Not Found" })
         }
 
-        if ((!student.studentCourseCompleted)) {
+        if (!student.studentCourseCompleted) {
             return res.status(200).json({ message: "Student Course Not Completed" })
         }
 
@@ -66,7 +66,9 @@ const studentLogin = async (req, res) => {
             return res.status(200).json({
                 message: "Course Completed Successfully",
                 certificateId: student.certificateId,
-                expireDate: student.expireDate.toISOString().split('T')[0]
+                expireDate: student.expireDate.toISOString().split('T')[0],
+                studentName: student.studentName,
+                studentCourseName: student.studentCourseName
             });
         }
 
@@ -84,19 +86,37 @@ const studentLogin = async (req, res) => {
             certificateId = "BL" + "AWS" + Math.ceil((Math.random() * 10000));
         }
 
+        // const coursePrefixes = {
+        //     "Full Stack Web Development": "FSWB",
+        //     "Gen AI": "GAI",
+        //     "Data Science": "DS",
+        //     "Data Analytics": "DA",
+        //     "AWS": "AWS"
+        // };
+
+        // const courseCode = coursePrefixes[student.studentCourseName] || "GEN";
+        // const certificateId = `BL${courseCode}${Math.ceil(Math.random() * 10000)}`;
+
         const expireDate = new Date();
         expireDate.setFullYear(expireDate.getFullYear() + 2);
 
         if (!student.certificateId) { 
             student.certificateId = certificateId; 
+            student.expireDate = expireDate;
         }
-        student.expireDate = expireDate;
+        
+
+        // student.certificateId = certificateId;
+        // student.expireDate = new Date();
+        // student.expireDate.setFullYear(student.expireDate.getFullYear() + 2);
         await student.save();
 
         res.status(200).json({
             message: "Course Completed Successfully. Certificate Issued!",
             certificateId: certificateId,
-            expireDate: expireDate.toISOString().split('T')[0]
+            expireDate: expireDate.toISOString().split('T')[0],
+            studentName: student.studentName,
+            studentCourseName: student.studentCourseName
         });
         console.log("Certificate Issued");
 
@@ -169,16 +189,16 @@ const deleteStudent = async (req, res) => {
 const verifyCertificate = async (req, res) => {
     const { certificateId } = req.body;
     try {
-        const certificate = await Student.findOne({ certificateId });
-        if (!certificate) {
+        const student = await Student.findOne({ certificateId });
+        if (!student) {
             return res.status(404).json({ message: "Invalid CertificateId" });
         }
         res.status(200).json({
             message: "Certificate Verified",
-            certificateId: certificate.certificateId,
-            studentName: certificate.studentName,
-            courseName: certificate.courseName,
-            expireDate: certificate.expireDate.toISOString().split('T')[0]
+            certificateId: student.certificateId,
+            studentName: student.studentName,
+            courseName: student.studentCourseName,
+            expireDate: student.expireDate.toISOString().split('T')[0]
         });
     } catch (error) {
         console.error(error);
@@ -187,4 +207,4 @@ const verifyCertificate = async (req, res) => {
 }
 
 
-module.exports = { studentRegister, studentLogin, updateStudent, deleteStudent, verifyCertificate ,getAllStudents,getStudent};
+module.exports = { studentRegister, studentLogin, updateStudent, deleteStudent, verifyCertificate , getAllStudents, getStudent};

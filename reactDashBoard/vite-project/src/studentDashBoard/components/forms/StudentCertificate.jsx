@@ -1,35 +1,49 @@
-import React from 'react'
-import { useLocation } from 'react-router-dom'
+import React from "react";
+// import { useLocation } from "react-router-dom";
 
-const StudentCertificate = () => {
+const StudentCertificate = ({student}) => {
+    // const location = useLocation();
+    // const student = location.state?.student;
 
-    const location = useLocation();
-    const student = location.state?.student; // 👈 Retrieve student data
-
-    if (!student) {
+    if (!student || !student.studentName || !student.studentCourseName) {
         return <h2>No Certificate Data Found!</h2>;
     }
 
+    const handleDownloadCertificate = () => {
+        // Assuming the backend provides a certificate download URL
+        if (student.certificateUrl) {
+            window.open(student.certificateUrl, "_blank");
+        } else {
+            alert("Certificate download is not available.");
+        }
+    };
+
     return (
         <div className="studentLoginForm">
-            <h1 className='formHeading'>Course Completion Certificate</h1>
+            <h1 className="formHeading">Course Completion Certificate</h1>
             <div className="">
-                <div className='courseCompleteDetails'>
-                    <label htmlFor="" className='labelText'>Name : </label>
-                    <p className='labelText'>{student.studentName}</p>
+                <div className="courseCompleteDetails">
+                    <label className="labelText">Name  : </label>
+                    <p className="labelText">{student.studentName}</p>
                 </div>
-                <div className='courseCompleteDetails'>
-                    <label htmlFor="" className='labelText'>Course Taken : </label>
-                    <p className='labelText'>{student.studentCourseName}</p>
+                <div className="courseCompleteDetails">
+                    <label className="labelText">Course Taken  : </label>
+                    <p className="labelText">{student.studentCourseName}</p>
                 </div>
-                <div className='courseCompleteDetails'>
-                    <label htmlFor="" className='labelText'>Certificate Id : </label>
-                    <p className='labelText'>{student.certificateId}</p>
+                <div className="courseCompleteDetails">
+                    <label className="labelText">Certificate Id  : </label>
+                    <p className="labelText">{student.certificateId}</p>
+                </div>
+                <div className="courseCompleteDetails">
+                    <label className="labelText">Expiry Date  : </label>
+                    <p className="labelText">{student.expireDate}</p>
                 </div>
             </div>
-            <button className='getCertificateBtn'>Download Certificate</button>
+            <button className="getCertificateBtn" onClick={handleDownloadCertificate}>
+                Download Certificate
+            </button>
         </div>
-    )
-}
+    );
+};
 
-export default StudentCertificate
+export default StudentCertificate;

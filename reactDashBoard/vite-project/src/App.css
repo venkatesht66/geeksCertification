@@ -24,11 +24,10 @@
     border-radius: 5px;
 }
 
-.btnContainer{
+.homeContainer{
     text-align: center;
     display: flex;
-    flex-direction: row;
-    justify-content: center;
+    flex-direction: column;
     flex-wrap: wrap;
 }
 
@@ -72,4 +71,19 @@
     display: flex;
     flex-direction: row;
     justify-content: center;
+}
+
+.btnContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.verifyContainer{
+    text-align: center;
+}
+
+.verifyColor{
+    color: green;
 }

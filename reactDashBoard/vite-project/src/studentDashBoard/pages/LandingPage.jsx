@@ -5,7 +5,7 @@ import StudentLogin from '../components/forms/StudentLogin'
 import StudentCertificate from '../components/forms/StudentCertificate'
 import StudentVerify from '../components/forms/StudentVerify'
 import CertificateHomePage from '../components/forms/CertificateHomePage'
-import CertificateVerified from '../components/forms/CertificateVerified'
+
 
 
 const LandingPage = () => {
@@ -19,47 +19,47 @@ const LandingPage = () => {
   const navigate = useNavigate();
 
   const showCandidateToEnterDetails = () => {
-    setStudentToEnterDetails(true)
+    setStudentToEnterDetails(true);
     // setStudentToEnterId(false)
-    setShowStudentAction(false)
-    setStudentVerified(false)
-    setVerifyCertificate(false)
+    setShowStudentAction(false);
+    setStudentVerified(false);
+    setVerifyCertificate(false);
   }
 
   const handleStudentLoginSuccess = (data)=>{
     setStudentData(data);
-    setStudentToEnterDetails(false)
+    setStudentToEnterDetails(false);
     // setStudentToEnterId(false)
-    setShowStudentAction(false)
-    setStudentVerified(true)
-    // setVerifyCertificate(false)
-    navigate('/certificate',{state:{student:data}});
+    setShowStudentAction(false);
+    setStudentVerified(true);
+    // setVerifyCertificate(false);
+    // navigate('/certificate',{state:{student:data}});
   }
 
   const showCandidateToEnterId = () => {
     setStudentToEnterDetails(false)
-    // setStudentToEnterId(true)
+    setStudentToEnterId(true)
     setShowStudentAction(false)
     setStudentVerified(false)
     setVerifyCertificate(false)
   }
 
   const showCandidateVerify = () => {
-    setStudentToEnterDetails(false)
-    // setStudentToEnterId(false)
-    setShowStudentAction(false)
-    setStudentVerified(false)
-    setVerifyCertificate(true)
+    setStudentToEnterDetails(false);
+    // setStudentToEnterId(false);
+    setShowStudentAction(false);
+    setStudentVerified(false);
+    setVerifyCertificate(true);
   }
 
   return (
     <>
       <Navbar />
-      {showStudentActions && <CertificateHomePage showCandidateToEnterDetails={showCandidateToEnterDetails} showCandidateToEnterId={showCandidateToEnterId} />}
+      {showStudentActions && <CertificateHomePage showCandidateToEnterDetails={showCandidateToEnterDetails} showCandidateVerify={showCandidateVerify} />}
       {studentToEnterDetails && <StudentLogin handleStudentLoginSuccess={handleStudentLoginSuccess}/>}
-      {studentVerified && studentData && <StudentCertificate />}
+      {studentVerified && studentData && <StudentCertificate student={studentData} />}
       {/* {studentToEnterId && <StudentVerify showCandidateVerify={showCandidateVerify} />} */}
-      {verifyCertificate && <CertificateVerified />}
+      {verifyCertificate && <StudentVerify />}
     </>
   )
 }

@@ -7,19 +7,20 @@ const StudentLogin = ({handleStudentLoginSuccess}) => {
     const [studentEmail,setStudentEmail] = useState("");
     const [studentData,setStudentData] = useState(null);
     const [error,setError] = useState("");
+    const navigate = useNavigate();
 
     const validateInputs = ()=>{
         const phoneRegex = /^[0-9]{10}$/;
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-        if (!phoneRegex.text(studentPhone)){
-            setError("Invalid Phone Number. Enter a 10-digit number.");
-            return false;
-        }
-
         if (!emailRegex.test(studentEmail)){
             setError("Invalid email format.");
             return false
+        }
+
+        if (!phoneRegex.test(studentPhone)){
+            setError("Invalid Phone Number. Enter a 10-digit number.");
+            return false;
         }
 
         setError("");
@@ -61,9 +62,11 @@ const StudentLogin = ({handleStudentLoginSuccess}) => {
             if (!response.ok){
                 throw new Error(data.message || "Error fetching student details");
             }
+            console.log("Updated Student Data:", data);
+            
             setStudentData(data);
             setError("")
-            StudentDetails(data);
+            handleStudentLoginSuccess(data);
         } catch (error) {
             setError(error.message);
             setStudentData(null);

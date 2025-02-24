@@ -29,8 +29,7 @@ const studentSchema = new mongoose.Schema({
         sparse:true
     },
     expireDate:{
-        type:Date,
-        required:false
+        type:Date
     }
 })
 
