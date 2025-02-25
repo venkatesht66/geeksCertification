@@ -30,7 +30,6 @@ const studentRegister = async (req, res) => {
     }
 }
 
-
 const getAllStudents = async (req, res) => {
     try {
         const students = await Student.find();
@@ -48,7 +47,6 @@ const getAllStudents = async (req, res) => {
         res.status(500).json({ error: "Internal Server Error" });
     }
 };
-
 
 const studentLogin = async (req, res) => {
     const { studentPhone,studentEmail } = req.body;
@@ -130,7 +128,6 @@ const updateStudent = async (req, res) => {
     const { studentPhone, updates } = req.body;
     console.log("Received phone number:", studentPhone);
     console.log("Updates received:", updates);
-
     try {
         const student = await Student.findOneAndUpdate(
             { studentPhone },
@@ -150,7 +147,6 @@ const updateStudent = async (req, res) => {
     }
 }
 
-
 const getStudent = async (req, res) => {
     const { studentPhone } = req.params;
 
@@ -167,7 +163,6 @@ const getStudent = async (req, res) => {
         res.status(500).json({ error: "Internal Server Error" });
     }
 };
-
 
 const deleteStudent = async (req, res) => {
     const { studentPhone } = req.body;
