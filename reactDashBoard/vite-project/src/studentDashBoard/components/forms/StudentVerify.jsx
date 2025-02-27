@@ -47,7 +47,7 @@ const StudentVerify = () => {
                     <h3 className="verifyColor">Certificate Verified!</h3>
                     <p><strong>Student Name:</strong> {verificationResult.studentName}</p>
                     <p><strong>Course Name:</strong> {verificationResult.courseName}</p>
-                    <p><strong>Expire Date:</strong> {verificationResult.expireDate}</p>
+                    {/* <p><strong>Expire Date:</strong> {verificationResult.expireDate}</p> */}
                 </div>
             )}
 

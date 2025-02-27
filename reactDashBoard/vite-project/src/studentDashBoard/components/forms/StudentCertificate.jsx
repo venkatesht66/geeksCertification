@@ -1,5 +1,5 @@
 import React from "react";
-// import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const StudentCertificate = ({student}) => {
     // const location = useLocation();
@@ -33,10 +33,6 @@ const StudentCertificate = ({student}) => {
                 <div className="courseCompleteDetails">
                     <label className="labelText">Certificate Id  : </label>
                     <p className="labelText">{student.certificateId}</p>
-                </div>
-                <div className="courseCompleteDetails">
-                    <label className="labelText">Expiry Date  : </label>
-                    <p className="labelText">{student.expireDate}</p>
                 </div>
             </div>
             <button className="getCertificateBtn" onClick={handleDownloadCertificate}>

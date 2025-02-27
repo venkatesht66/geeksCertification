@@ -59,9 +59,13 @@ const StudentLogin = ({handleStudentLoginSuccess}) => {
 
             const data = await response.json();
 
-            if (!response.ok){
-                throw new Error(data.message || "Error fetching student details");
+            console.log("🔥 API Response:", data);
+
+            if (!response.ok) {
+                setError(data.message || "Error fetching student details");
+                return;
             }
+
             console.log("Updated Student Data:", data);
             
             setStudentData(data);
@@ -79,11 +83,11 @@ const StudentLogin = ({handleStudentLoginSuccess}) => {
             <div className='formInputs'>
                 <div className="mb-3">
                     <label className='labelText'>Candidate Phone Number:</label>
-                    <input type="text" value={studentPhone} onChange={(e)=> setStudentPhone(e.target.value)} />
+                    <input type="text" value={studentPhone} onChange={(e)=> setStudentPhone(e.target.value)} onBlur={validateInputs}  />
                 </div>
                 <div className="mb-3">
                     <label className='labelText'>Candidate Email Id:</label>
-                    <input type="text" value={studentEmail} onChange={(e)=>setStudentEmail(e.target.value)} />
+                    <input type="text" value={studentEmail} onChange={(e)=>setStudentEmail(e.target.value)} onBlur={validateInputs} />
                 </div>
             </div>
 

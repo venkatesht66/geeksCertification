@@ -58,7 +58,7 @@ const StudentRegister = () => {
                         <option value="Data Analytics">Data Analytics</option>
                         <option value="Full Stack Web Development">Full Stack Web Development</option>
                         <option value="Gen AI">Generative AI</option>
-                        <option value="AWS">Amazon Web Services</option>
+                        <option value="AWS">AWS</option>
                     </select>
                     <div>
                         <label className='labelText'>Course Status : </label>
