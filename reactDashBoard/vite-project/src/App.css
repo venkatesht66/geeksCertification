@@ -87,3 +87,33 @@
 .verifyColor{
     color: green;
 }
+
+.adminPanel{
+    text-align: center;
+}
+
+.loginContainer{
+    text-align: center;
+}
+
+.logoutBtn{
+    background-color: black;
+    color:white;
+    font-family: "Roboto";
+    height:50px;
+    width:100px;
+    cursor: pointer;
+    margin:20px;
+    border-radius: 5px;
+}
+
+.loginBtn{
+    background-color: black;
+    color:white;
+    font-family: "Roboto";
+    height:50px;
+    width:100px;
+    cursor: pointer;
+    margin:20px;
+    border-radius: 5px;
+}

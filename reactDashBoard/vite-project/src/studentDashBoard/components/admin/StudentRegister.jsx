@@ -7,35 +7,66 @@ const StudentRegister = () => {
     const [studentEmail,setStudentEmail] = useState("")
     const [studentPhone,setStudentPhone] = useState("")
     const [studentCourseName,setStudentCourseName] = useState("")
-    const [studentCourseCompleted,setStudentCourseCompleted] = useState("")
+    const [studentCourseCompleted,setStudentCourseCompleted] = useState(null)
     const [error,setError] = useState("")
     const [loading,setLoading] = useState(false)
 
+    const token = localStorage.getItem("adminToken"); 
+
+    if (!token) {
+        setError("User is not authenticated");
+        setLoading(false);
+        return;
+    }
+
+    const validateForm = () => {
+        if (!studentName || !studentEmail || !studentPhone || !studentCourseName || studentCourseCompleted === null) {
+            setError('All fields are required');
+            return false;
+        }
+        if (!/\S+@\S+\.\S+/.test(studentEmail)) {
+            setError('Invalid email format');
+            return false;
+        }
+        if (!/^\d{10}$/.test(studentPhone)) {
+            setError('Phone number must be 10 digits');
+            return false;
+        }
+        return true;
+    };
+
     const handleSubmit = async(event)=>{
         event.preventDefault();
-        setLoading(true);
         setError("")
+
+        if (!validateForm()) return;
+
+        setLoading(true);
+
         try {
-            const response = await fetch(`${API_URL}student/admin`,{
+            const response = await fetch(`${API_URL}admin/register-student`,{
                 method : 'POST',
                 headers:{
-                    'Content-Type':'application/json'
+                    'Content-Type':'application/json',
+                    "Authorization": `Bearer ${token}` 
                 },
                 body:JSON.stringify({studentName,studentEmail,studentPhone,studentCourseName,studentCourseCompleted})
             });
             const data = await response.json();
-            setError(data.message || "Registration failed")
+            if (!response.ok) throw new Error(data.message || 'Registration failed');
             if (response.ok){
                 console.log(data);
                 setStudentName("");
                 setStudentEmail("");
                 setStudentPhone("");
                 setStudentCourseName("");
-                setStudentCourseCompleted("");
+                setStudentCourseCompleted(null);
                 alert("Student Registered Successfully");
             }
         } catch (error) {
-            console.error("Registeration Failed",error);
+            console.error("Registeration Failed : ",error);
+        }finally {
+            setLoading(false);
         }
     }
 
@@ -44,6 +75,7 @@ const StudentRegister = () => {
             <Navbar />
             <div className="registerSection studentLoginForm">
                 <h2 className='formHeading'>Enter Student Details</h2>
+                {error && <p className="errorMessage">{error}</p>}
                 <form onSubmit={handleSubmit}>
                     <label className='labelText'>Student Name : </label>
                     <input type='text' name='studentName' value={studentName} onChange={(e)=> setStudentName(e.target.value)} placeholder='Enter Student Name' /><br />
@@ -62,13 +94,13 @@ const StudentRegister = () => {
                     </select>
                     <div>
                         <label className='labelText'>Course Status : </label>
-                        <select name="studentCourseCompleted" value={studentCourseCompleted ? "Completed" : "Not Completed"} onChange={(e)=> setStudentCourseCompleted(e.target.value === 'Completed')}>
+                        <select name="studentCourseCompleted" value={studentCourseCompleted === true ? "Completed" : studentCourseCompleted === false ? "Not Completed" : ""} onChange={(e)=> setStudentCourseCompleted(e.target.value === 'Completed')}>
                             <option value="">Select Course Status</option>
                             <option value="Completed">Completed</option>
                             <option value="Not Completed">Not Completed</option>
                         </select>
                     </div>
-                    <button type="submit" className='getCertificateBtn'>Add Student</button>
+                    <button type="submit" className='getCertificateBtn' disabled={loading}>{loading ? 'Registering...' : 'Add Student'}</button>
                 </form>
             </div>
         </>

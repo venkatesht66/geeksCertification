@@ -4,10 +4,18 @@ import { API_URL } from '../../data/API_Path';
 
 const StudentEdit = () => {
     const [studentPhone, setStudentPhone] = useState("");
-    const [updates, setUpdates] = useState(null); // Initially null to hide form
+    const [updates, setUpdates] = useState({}); // Initially null to hide form
     const [message, setMessage] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
+
+    const token = localStorage.getItem("adminToken"); 
+
+    if (!token) {
+        setError("User is not authenticated");
+        setLoading(false);
+        return;
+    }
 
     // Fetch student data when button is clicked
     const fetchStudentData = async () => {
@@ -21,14 +29,22 @@ const StudentEdit = () => {
         setMessage("");
 
         try {
-            const response = await fetch(`${API_URL}student/admin/edit-student/${studentPhone}`);
-
-            if (!response.ok) {
-                throw new Error("Student not found");
-            }
+            const response = await fetch(`${API_URL}admin/edit-student`, {
+                method: "POST", // ✅ Change from GET to POST
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({ studentPhone })
+            });
 
             const data = await response.json();
-            // Populate form fields if student exists
+
+            if (!response.ok) {
+                throw new Error(data.message || "Student not found");
+            }
+
+            // ✅ Populate form fields
             setUpdates({
                 studentName: data.studentName || "",
                 studentEmail: data.studentEmail || "",
@@ -39,7 +55,7 @@ const StudentEdit = () => {
             setMessage("Student data loaded successfully!");
         } catch (error) {
             setError(error.message);
-            setUpdates({ studentName: "", studentEmail: "", studentCourseName: "", studentCourseCompleted: false });
+            setUpdates({});
         } finally {
             setLoading(false);
         }
@@ -70,9 +86,12 @@ const StudentEdit = () => {
         });
 
         try {
-            const response = await fetch(`${API_URL}student/admin/edit-student`, {
+            const response = await fetch(`${API_URL}admin/edit-student`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type':'application/json',
+                    "Authorization": `Bearer ${token}` 
+                },
                 body: JSON.stringify({
                     studentPhone, 
                     updates
@@ -106,9 +125,12 @@ const StudentEdit = () => {
         }
     
         try {
-            const response = await fetch(`${API_URL}student/admin/delete-student`, {
+            const response = await fetch(`${API_URL}admin/delete-student`, {
                 method: 'DELETE',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    "Authorization": `Bearer ${token}`
+                 },
                 body: JSON.stringify({ studentPhone })
             });
     
@@ -120,7 +142,7 @@ const StudentEdit = () => {
     
             alert("Student Deleted Successfully!");
             setStudentPhone(""); // Clear input
-            setUpdates({ studentName: "", studentEmail: "", studentCourseName: "", studentCourseCompleted: false });
+            setUpdates({});
         } catch (error) {
             setError(error.message);
         }

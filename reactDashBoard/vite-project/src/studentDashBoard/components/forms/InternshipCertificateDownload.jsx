@@ -23,7 +23,7 @@ const StudentCertificate = () => {
         <>
         <Navbar/>
         <div className="studentLoginForm">
-            <h1 className="formHeading">Course Completion Certificate</h1>
+            <h1 className="formHeading">Internship Completion Certificate</h1>
             <div className="">
                 <div className="courseCompleteDetails">
                     <label className="labelText">Name  : </label>
@@ -36,6 +36,10 @@ const StudentCertificate = () => {
                 <div className="courseCompleteDetails">
                     <label className="labelText">Certificate Id  : </label>
                     <p className="labelText">{student.certificateId}</p>
+                </div>
+                <div className="courseCompleteDetails">
+                    <label className="labelText">Valid Until  : </label>
+                    <p className="labelText">{student.expiryDate}</p>
                 </div>
             </div>
             <button className="getCertificateBtn" onClick={handleDownloadCertificate}>

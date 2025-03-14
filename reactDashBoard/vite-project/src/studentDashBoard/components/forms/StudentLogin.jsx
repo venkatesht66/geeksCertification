@@ -1,11 +1,11 @@
 import React,{useState} from 'react'
 import {API_URL} from '../../data/API_Path'
 import {useNavigate} from 'react-router-dom'
+import Navbar from '../Navbar'
 
 const StudentLogin = ({handleStudentLoginSuccess}) => {
     const [studentPhone,setStudentPhone] = useState("");
     const [studentEmail,setStudentEmail] = useState("");
-    const [studentData,setStudentData] = useState(null);
     const [error,setError] = useState("");
     const navigate = useNavigate();
 
@@ -27,31 +27,11 @@ const StudentLogin = ({handleStudentLoginSuccess}) => {
         return true
     };
 
-    const StudentDetails = async () =>{
-        try {
-            const response = await fetch(`${API_URL}student/studentLogin`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ studentEmail, studentPhone }),
-            });
-    
-            const data = await response.json();
-    
-            if (response.ok) {
-                navigate('/certificate', { state: { student: data } }); // 👈 Pass data via state
-            } else {
-                alert(data.message);
-            }
-        } catch (error) {
-            console.error("Error fetching student data", error);
-        }
-    }
-
     const fetchCertificateDetails = async()=>{
         if (!validateInputs()) return;
 
         try {
-            const response = await fetch(`${API_URL}student/studentLogin`,{
+            const response = await fetch(`${API_URL}student/course-login`,{
                 method:"POST",
                 headers:{"Content-Type":"application/json"},
                 body:JSON.stringify({studentPhone,studentEmail})
@@ -66,18 +46,27 @@ const StudentLogin = ({handleStudentLoginSuccess}) => {
                 return;
             }
 
+            if (!data.certificateId) {
+                setError("Course not completed yet. Certificate unavailable!");
+                return;
+            }
+
             console.log("Updated Student Data:", data);
+
+            navigate('/certificate', { state: { student: data } });
             
-            setStudentData(data);
+            // setStudentData(data);
             setError("")
             handleStudentLoginSuccess(data);
         } catch (error) {
             setError(error.message);
-            setStudentData(null);
+            // setStudentData(null);
         }
     }
 
     return (
+        <>
+        <Navbar/>
         <div className='studentLoginForm'>
             <h1 className='formHeading'>Course Completion Certificate</h1>
             <div className='formInputs'>
@@ -94,6 +83,7 @@ const StudentLogin = ({handleStudentLoginSuccess}) => {
             {error && <p className="error-message">{error}</p>}
             <button className='getCertificateBtn' onClick={fetchCertificateDetails}>Get Certificate</button>
         </div>
+        </>
     )
 }
 
